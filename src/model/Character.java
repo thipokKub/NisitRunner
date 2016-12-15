@@ -22,6 +22,13 @@ public abstract class Character extends Moveable implements IKeyPressable{
 	private int posYBefore;
 	private int deltaTime;
 	public boolean allowOffScreen;
+	
+	/*
+	 * Constructor for Character object
+	 * x, y is the position on the screen with reference point on top-left of the image
+	 * frameDisplay is the list of String contain all the frame that character will loop through
+	 * 
+	 */
 
 	public Character(int x, int y, ArrayList<String> frameDisplay) {
 		super(x, y);
@@ -42,6 +49,12 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		deltaTime = 0;
 	}
 	
+	/*
+	 * Constructor for character but without initializing frameDisplay
+	 * instead were given frameAmount for how many frameDisplay's frame will be
+	 * Need to initialize frameDisplay before using
+	 */
+	
 	public Character (int x, int y, int frameAmount) {
 		super(x, y);
 		frameCounter = 0;
@@ -52,6 +65,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		frameCounterJump = 0;
 		deltaTime = 0;
 	}
+	
+	//Reset all the important parameter
 	
 	public void reset() {
 		frameCounter = 0;
@@ -64,6 +79,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		deltaTime = 0;
 	}
 	
+	//Setter for frameDisplay with input as ArrayList of String that is the locaton of the file
+	
 	public void setImage(ArrayList<String> frameDisplay) {
 		for(int i = 0; i < frameAmount; i++) {
 			try {
@@ -74,14 +91,20 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		}
 	}
 	
+	//Setter for frameDisplay with input as ArrayList of Image
+	
 	public void setUpImage(ArrayList<Image> frameDisplay) {
 		this.frameDisplay = frameDisplay;
 	}
+	
+	//Method handle with drawing frame on screen
 	
 	@Override
 	public void draw(GraphicsContext gc) {
 		gc.drawImage(frameDisplay.get(frameCounter), x, y);
 	}
+	
+	//Method that handle the frame of character to be change and also its position
 	
 	public void updateFrame() {
 		if(ProgressHolder.frameCounter%ProgressHolder.frameSkip==0) {
@@ -118,6 +141,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		}
 	}
 	
+	//Called when character jump
+	
 	public void jump() {
 		if(!isJump) {
 			frameCounterJump = frameAmount;
@@ -128,6 +153,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 			AudioUtility.playJump();
 		}
 	}
+	
+	//Called when character hit the obstacle and then forced to jump
 	
 	public void jumpHurt() {
 		if(!isJump) {
@@ -140,6 +167,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		}
 	}
 	
+	//Called when character was consider dead, will rest below the screen
+	
 	public void jumpDead() {
 		if(!isJumpDead) {
 			gravity = 40;
@@ -151,15 +180,21 @@ public abstract class Character extends Moveable implements IKeyPressable{
 			AudioUtility.playGameOver();
 		}
 	}
+	
+	//Setter for destroy
 
 	@Override
 	public boolean isDestroy() {
 		return destroy;
 	}
 	
+	//Getter for destroy
+	
 	public void setDestroy(boolean destroy) {
 		this.destroy = destroy;
 	}
+	
+	//Resize all the frameDisplay to the correct height and width
 	
 	public void resize(int height, int width) {
 		ArrayList<Image> temporary = new ArrayList<>();
@@ -168,6 +203,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		}
 		frameDisplay = temporary;
 	}
+	
+	//Resize all the frameDisplay to the correct height with the same aspect ratio as the original image
 	
 	public void resizeByHeight(int height) {
 		double ratio = frameDisplay.get(0).getWidth()/frameDisplay.get(0).getHeight();
@@ -178,6 +215,8 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		frameDisplay = temporary;
 	}
 	
+	//Resize all the frameDisplay to the correct width with the same aspect ratio as the original image
+	
 	public void resizeByWidth(int width) {
 		double ratio = frameDisplay.get(0).getHeight()/frameDisplay.get(0).getWidth();
 		ArrayList<Image> temporary = new ArrayList<>();
@@ -187,9 +226,13 @@ public abstract class Character extends Moveable implements IKeyPressable{
 		frameDisplay = temporary;
 	}
 	
+	//Get the frameDisplay height
+	
 	public int getHeight() {
 		return (int)frameDisplay.get(0).getHeight();
 	}
+	
+	//Get frameDisplay width
 	
 	public int getWidth() {
 		return (int)frameDisplay.get(0).getWidth();

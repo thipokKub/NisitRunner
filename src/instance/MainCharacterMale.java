@@ -11,7 +11,6 @@ import logic.GameManager;
 
 public class MainCharacterMale extends model.Character {
 	private String name;
-	private int score;
 	private KeyCode previous;
 	public boolean gotHitFront, jumpUp;
 	private int frameLeft, frameHPDecreaseStart, frameLag;
@@ -29,7 +28,6 @@ public class MainCharacterMale extends model.Character {
 			add("resource/character/main/male/Running/frame7.png");
 		}});
 		this.name = name;
-		this.score = 0;
 		previous = null;
 		gotHitFront = false;
 		jumpUp = false;
@@ -47,7 +45,6 @@ public class MainCharacterMale extends model.Character {
 	public void resetToo() {
 		this.reset();
 		gravity = 30;
-		this.score = 0;
 		previous = null;
 		gotHitFront = false;
 		jumpUp = false;

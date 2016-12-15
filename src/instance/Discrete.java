@@ -13,7 +13,6 @@ public class Discrete extends model.Character{
 	
 	private int frameCounter;
 	private final int totalTimeMove;
-	public int objectToRelease;
 	private ArrayList<Obstacle> Obstacle;
 	
 	public Discrete(int x, int y) throws ResourceException {
@@ -24,7 +23,6 @@ public class Discrete extends model.Character{
 			}});
 		frameCounter = 0;
 		totalTimeMove = (int)(0.5*ProgressHolder.frameRate); //unit in frame
-		objectToRelease = 5; //5 Activity
 		// TODO Auto-generated constructor stub
 		Obstacle = new ArrayList<Obstacle>() {
 			{

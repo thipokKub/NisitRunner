@@ -26,7 +26,6 @@ public class ProgressHolder {
 	public static final Font f = Font.font("Time New Roman", FontWeight.LIGHT, 30);
 	
 	public static ArrayList<Thread> AllThreads = new ArrayList<>();
-	public static ArrayList<MovingBackground> BackgroundHolder = new ArrayList<>();
 	
 	//Holder for myCallBack, not draw -> already handle
 	public static ArrayList<ButtonImage> updateOnReleased = new ArrayList<>();
@@ -57,8 +56,6 @@ public class ProgressHolder {
 	public static DrawImage BlackScreen;
 	public static MainCharacterMale mainCharacter;
 	
-	public static GameText CreditsOne;
-	public static GameText CreditsTwo;
 	public static DrawImage GameCredits;
 	
 	public static final int monsterPositionX = ProgressHolder.windowWidth-ProgressHolder.characterSize+10;

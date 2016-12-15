@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 
 public class BackButton extends model.ButtonImage{
 	
-	private static final String path = "resource/Button/Back.png";
+	private static final String path = "resource/button/back.png";
 	
 	public BackButton(int x, int y, int width, int height) {
 		super(x, y, path, path, path, width, height);

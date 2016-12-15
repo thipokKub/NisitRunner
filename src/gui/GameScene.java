@@ -32,14 +32,12 @@ import model.DrawImage;
 
 public class GameScene extends GameInput{
 	
-	private static ArrayList<Image> myImage = new ArrayList<>();
 	public static GameScene me;
 	public static boolean drawFadeOut;
 	private static boolean drawFadeOutDone;
 	private static boolean isGameOver;
 	private static final int totalTimeCountDown = (int)(89.5*1000);
 	private static double timeCountDown;
-	private static int frameLeft, frameHPDecreaseStart, frameLag;
 	
 	private static MovingBackground blueSky, buildings, cloud, road, spotlight;
 	public static MovingBackground spotlightForeground;
@@ -63,11 +61,6 @@ public class GameScene extends GameInput{
 		ProgressHolder.scoreDiscrete = 0;
 		ProgressHolder.scoreProgMeth = 0;
 		
-		//For checking if character got to badGuy for more than frameSkip then bounce him off!
-		frameLeft = 0; //track frameStart
-		frameHPDecreaseStart = 0; //track for starting frame when touch the badGuy
-		frameLag = 0; //For main character to blink
-		
 		ProgressHolder.frameCounter = 0;
 		
 		System.out.println("New Setting Scene");
@@ -85,17 +78,15 @@ public class GameScene extends GameInput{
 		Platform.runLater(() -> {
 			if(blueSky == null) {
 				try {
-					blueSky = new MovingBackground(0, 0, -1, "resource/Background/blue_bg.png", -1, false);
+					blueSky = new MovingBackground(0, 0, -1, "resource/background/blue_bg.png", -1, false);
 					blueSky.fitHeight(GameManager.gc);
 					blueSky.setZ(1);
 				} catch (ResourceException e) {
 					e.printStackTrace();
 				}
-				
-				
-				//
+
 				try {
-					spotlight = new MovingBackground(0, 0, -1, "resource/Background/spotlight.png", 1, false);
+					spotlight = new MovingBackground(0, 0, -1, "resource/background/spotlight.png", 1, false);
 					spotlight.fitHeight(GameManager.gc);
 					spotlight.setZ(1500);
 				} catch (ResourceException e) {
@@ -105,7 +96,7 @@ public class GameScene extends GameInput{
 				//
 				
 				try {
-					buildings = new MovingBackground(0, 0, -3, "resource/Background/building.png", -1, false);
+					buildings = new MovingBackground(0, 0, -3, "resource/background/building.png", -1, false);
 					buildings.fitHeight(GameManager.gc);
 					buildings.setZ(2);
 				} catch (ResourceException e) {
@@ -113,14 +104,14 @@ public class GameScene extends GameInput{
 				}
 				
 				try {
-					cloud = new MovingBackground(0, 0, -2, "resource/Background/cloud.png", -1, false);
+					cloud = new MovingBackground(0, 0, -2, "resource/background/cloud.png", -1, false);
 					cloud.fitHeight(GameManager.gc);
 					cloud.setZ(3);
 				} catch (ResourceException e) {
 					e.printStackTrace();
 				}
 				try {
-					road = new MovingBackground(0, 0, -10, "resource/Background/road.png", -1, false);
+					road = new MovingBackground(0, 0, -10, "resource/background/road.png", -1, false);
 					road.fitHeight(GameManager.gc);
 					road.setZ(4);
 				} catch (ResourceException e) {
@@ -173,11 +164,22 @@ public class GameScene extends GameInput{
 			}
 			
 			try {
-				gameOver = new DrawImage(0, 0, "resource/text/gameover.png");
-				gameOver.setSizeByHeight(ProgressHolder.windowHeight);
+				if(gameOver == null) {
+					gameOver = new DrawImage(0, 0, "resource/text/gameover.png");
+					gameOver.setSizeByHeight(ProgressHolder.windowHeight);
+				} else {
+					gameOver.setX(0);
+					gameOver.setY(0);
+				}
 				
-				start = new DrawImage(0, 0, "resource/text/start.png");
-				start.setSizeByHeight(ProgressHolder.windowHeight);
+				if(start == null) {
+					start = new DrawImage(0, 0, "resource/text/start.png");
+					start.setSizeByHeight(ProgressHolder.windowHeight);
+				} else {
+					start.setX(0);
+					start.setY(0);
+				}
+				
 				
 			} catch (ResourceException e1) {
 				// TODO Auto-generated catch block
@@ -213,15 +215,7 @@ public class GameScene extends GameInput{
 	}
 	
 	@Override
-	public void addEventListener() {
-		// TODO Auto-generated method stub
-		GameManager.root.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				me.updateOnMouseClick(event);
-			}
-		});
-	}
+	public void addEventListener() {}
 	
 	@Override
 	public void setUpThreadAndAnimation() {
@@ -235,13 +229,11 @@ public class GameScene extends GameInput{
 				while(ProgressHolder.frameCounter < (int)(0.5*ProgressHolder.frameRate)) {
 					Platform.runLater(()-> {
 						GameManager.gc.clearRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
-						
 						updateMove();
 						updateValue();
 						updateDraw();
 						
 						ProgressHolder.BlackScreen.drawFadeInHoldFadeOut(0, 0, 500, GameManager.gc);
-						
 					});
 					
 					ProgressHolder.frameCounter++;
@@ -353,10 +345,6 @@ public class GameScene extends GameInput{
 	public void updateDraw() {
 		// TODO Auto-generated method stub
 		GameManager.gc.clearRect(0, 0, GameManager.gc.getCanvas().getWidth(), GameManager.gc.getCanvas().getHeight());
-		
-		for(Image x: myImage) {
-			GameManager.gc.drawImage(x, 10, 10);
-		}
 		
 		for(IRenderable e: RenderableHolder.instance.getEntities()) {
 			if(e instanceof Bar) {

@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 
 public class ContinueButton extends model.ButtonImage{
 	
-	private static final String path = "resource/Button/continue.png";
+	private static final String path = "resource/button/continue.png";
 	
 	public ContinueButton(int x, int y, int height) {
 		super(x, y, path, path, path, (int)((2557.0/497.0)*height), height);

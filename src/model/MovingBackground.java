@@ -15,10 +15,16 @@ public class MovingBackground extends Entity{
 	private int imgX;
 	private boolean destroy;
 	
+	/* Constructor for MovingBackground where
+	 * x, y is the position on the screen with reference point on top-left of the image
+	 * fileName is the path of the file
+	 * direction determine it to be moved left or right (+ right/ - left)
+	 * scaleFit is used if the background will be scaled up to screen height
+	 */
+	
 	public MovingBackground(int x, int y, int speed, String fileName, int direction, boolean scaleFit) throws ResourceException {
 		super(x, y);
 		this.direction = (direction > 0) ? 1 : -1;
-		//direction is positive - right, otherwise left
 		this.speed = this.direction*speed;
 		System.out.println(fileName);
 		
@@ -33,6 +39,8 @@ public class MovingBackground extends Entity{
 		z = 10;
 	}
 	
+	//Setter for background with fileName as file path
+	
 	public void setBackground(String fileName) throws ResourceException {
 		ProgressHolder.checkAvalible(fileName);
 		background = new Image(ClassLoader.getSystemResource(fileName).toString());
@@ -40,19 +48,27 @@ public class MovingBackground extends Entity{
 		bg = background.getPixelReader();
 	}
 	
+	//Setter for background with bg as Image
+	
 	public void setBackground(Image bg) {
 		background = bg;
 		imgX = (int) background.getWidth();
 		this.bg = background.getPixelReader();
 	}
 	
+	//Setter for speed
+	
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 	
+	//Getter for speed
+	
 	public int getSpeed() {
 		return speed;
 	}
+	
+	//Resize the background to fit height of gc
 	
 	public void fitHeight(GraphicsContext gc) {
 		if(background != null) {
@@ -64,26 +80,32 @@ public class MovingBackground extends Entity{
 		}
 	}
 	
+	//Method that handle drawing image on screen
+	
 	@Override
 	public void draw(GraphicsContext gc) {
 		int width = (int)(background.getWidth());
-		int height = (int)(background.getHeight());
+		
 		if(imgX > 0) {
-			WritableImage movingBackgroundOne = new WritableImage(bg, width-imgX, 0, imgX, height);
-			gc.drawImage(movingBackgroundOne, x, y);
+			gc.drawImage(background, imgX-width, 0);
 		}
-		if(width-imgX > 0) {
-			WritableImage movingBackgroundTwo = new WritableImage(bg, 0, 0, width-imgX, height);
-			gc.drawImage(movingBackgroundTwo, x+imgX, y);
+		if(width-imgX >0) {
+			gc.drawImage(background, imgX, 0);
 		}
+
 		imgX = (imgX-speed)%width;
 		if(imgX < 0) imgX += width;
+		
 	}
+	
+	//Getter for destroy
 
 	@Override
 	public boolean isDestroy() {
 		return destroy;
 	}
+	
+	//Setter for destroy
 	
 	public void setDestory(boolean value) {
 		destroy = value;

@@ -28,7 +28,6 @@ public class GameManager extends Application{
 	public static GraphicsContext gc;
 	public static Scene scene;
 	public static StackPane root;
-	private static Thread ThreadChecker;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -40,6 +39,8 @@ public class GameManager extends Application{
 		
 		ProgressHolder.isFirstTime = true;
 		ProgressHolder.isGodMode = false;
+		
+		primaryStage.setResizable(false);
 		
 		root = new StackPane();
 		ProgressHolder.frameCounter = 0;
@@ -57,7 +58,7 @@ public class GameManager extends Application{
 		gc.fillRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
 		
 		try {
-			ProgressHolder.BlackScreen = new DrawImage(0, 0, "resource/Background/BlackScreen.png");
+			ProgressHolder.BlackScreen = new DrawImage(0, 0, "resource/background/BlackScreen.png");
 		} catch (ResourceException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -85,34 +86,6 @@ public class GameManager extends Application{
 		
 		GameMenu GameMenu = new GameMenu();
 		
-//		ThreadChecker = new Thread(() -> {
-//			while(true) {
-//				try {
-//					for(int i = ProgressHolder.AllThreads.size()-1; i>= 0; i--) {
-//						if(!ProgressHolder.AllThreads.get(i).isAlive()) {
-//							ProgressHolder.AllThreads.remove(i);
-//						}
-//					}
-//					System.out.println(ProgressHolder.AllThreads);
-//					Thread.sleep(10000);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//		
-//		ThreadChecker.start();
-		
-//		for(Thread x: ProgressHolder.AllThreads) {
-//			x.join();
-//			System.out.println("Start called " + GameMenu.startCalled + ", Setting called " + GameMenu.settingCalled);
-//		}
-		
-//		ProgressHolder.AllThreads.add(new Thread(() -> {
-//			
-//		}));
-		
 		primaryStage.show();
 	}
 
@@ -126,7 +99,6 @@ public class GameManager extends Application{
 	
 	@Override
 	public void stop() {
-//		ThreadChecker.stop();
 		for(Thread e: ProgressHolder.AllThreads) {
 			e.interrupt();
 		}

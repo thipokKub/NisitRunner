@@ -21,7 +21,6 @@ import model.DrawImage;
 
 public class ResultScene extends GameInput{
 	
-	private static ArrayList<Image> myImage = new ArrayList<>();
 	public static ResultScene me;
 	public static boolean drawFadeOut;
 	private static boolean drawFadeOutDone;
@@ -73,7 +72,7 @@ public class ResultScene extends GameInput{
 			if(Background == null) {
 				//initialize and reset
 				try {
-					Background = new DrawImage(0, 0, "resource/Background/reg.png");
+					Background = new DrawImage(0, 0, "resource/background/reg.png");
 					Background.setZ(10);
 				} catch (ResourceException e) {
 					// TODO Auto-generated catch block
@@ -156,11 +155,11 @@ public class ResultScene extends GameInput{
 				
 				ProgressHolder.BlackScreen.resetDrawDissolveHold();
 				while(ProgressHolder.frameCounter < (int)(0.5*ProgressHolder.frameRate)) {
+					updateMove();
+					updateValue();
 					Platform.runLater(()-> {
 						GameManager.gc.clearRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
 						
-						updateMove();
-						updateValue();
 						updateDraw();
 						
 						ProgressHolder.BlackScreen.drawFadeInHoldFadeOut(0, 0, 500, GameManager.gc);
@@ -229,10 +228,6 @@ public class ResultScene extends GameInput{
 	public void updateDraw() {
 		// TODO Auto-generated method stub
 		GameManager.gc.clearRect(0, 0, GameManager.gc.getCanvas().getWidth(), GameManager.gc.getCanvas().getHeight());
-		
-		for(Image x: myImage) {
-			GameManager.gc.drawImage(x, 10, 10);
-		}
 		
 		for(IRenderable e: RenderableHolder.instance.getEntities()) {
 			e.draw(GameManager.gc);

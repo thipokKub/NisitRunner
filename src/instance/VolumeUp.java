@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import model.ButtonImage;
 
 public class VolumeUp extends ButtonImage{
-	private static final String path = "resource/Button/+.png";
+	private static final String path = "resource/button/+.png";
 	public VolumeUp(int x, int y, int width, int height) {
 		super(x, y, path, path, path, width, height);
 	}

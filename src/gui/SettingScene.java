@@ -34,7 +34,6 @@ import model.DrawImage;
 
 public class SettingScene extends GameInput{
 	
-	private static ArrayList<Image> myImage = new ArrayList<>();
 	public static SettingScene me;
 	public static boolean drawFadeOut;
 	private static boolean drawFadeOutDone;
@@ -97,13 +96,13 @@ public class SettingScene extends GameInput{
 		Platform.runLater(() -> {
 			if(background == null) {
 				try {
-					background = new DrawImage(0, 0, "resource/Background/setting_background.png");
+					background = new DrawImage(0, 0, "resource/background/setting_background.png");
 					background.setZ(10);
 					
-					foreground = new DrawImage(0, 0, "resource/Background/setting_foreground.png");
+					foreground = new DrawImage(0, 0, "resource/background/setting_foreground.png");
 					foreground.setZ(12);
 					
-					midground = new MovingBackground(0, 0, -1, "resource/Background/setting_midground.png", 1, false);
+					midground = new MovingBackground(0, 0, -1, "resource/background/setting_midground.png", 1, false);
 					midground.fitHeight(GameManager.gc);
 					midground.setZ(11);
 					
@@ -178,11 +177,10 @@ public class SettingScene extends GameInput{
 				
 				ProgressHolder.BlackScreen.resetDrawDissolveHold();
 				while(ProgressHolder.frameCounter < (int)(0.5*ProgressHolder.frameRate)) {
+					updateMove();
+					updateValue();
 					Platform.runLater(()-> {
 						GameManager.gc.clearRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
-						
-						updateMove();
-						updateValue();
 						updateDraw();
 						
 						ProgressHolder.BlackScreen.drawFadeInHoldFadeOut(0, 0, 500, GameManager.gc);
@@ -195,13 +193,17 @@ public class SettingScene extends GameInput{
 				ProgressHolder.BlackScreen.resetDrawDissolveHold();
 				
 				while(!drawFadeOutDone) {
+					if(drawFadeOut && !drawFadeOutDone) {
+						if(drawFade()) {
+							drawFadeOut = false;
+						};
+					}
 					Platform.runLater(() -> {
 						me.updateDraw();
 						
 						if(drawFadeOut && !drawFadeOutDone) {
 							if(drawFade()) {
 								ProgressHolder.BlackScreen.draw(GameManager.gc);
-								drawFadeOut = false;
 							};
 						}
 						if(drawFadeOutDone) {
@@ -269,10 +271,6 @@ public class SettingScene extends GameInput{
 	public void updateDraw() {
 		// TODO Auto-generated method stub
 		GameManager.gc.clearRect(0, 0, GameManager.gc.getCanvas().getWidth(), GameManager.gc.getCanvas().getHeight());
-		
-		for(Image x: myImage) {
-			GameManager.gc.drawImage(x, 10, 10);
-		}
 		
 		RenderableHolder.instance.sort();
 		

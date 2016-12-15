@@ -23,6 +23,11 @@ public class Obstacle extends Character{
 	private static ArrayList<KeyCode> codeList;
 	private static KeyCode previousKey;
 	
+	/* Constructor for obstacle where
+	 * x, y is the position on the screen with reference point on top-left of the image
+	 * typeOfObstacle is refer to kind of obstacle to be set onto the object
+	 */
+	
 	public Obstacle(int x, int y, String typeOfObstacle) throws ResourceException {
 		super(x, y, 1);
 		destroy = false;
@@ -104,14 +109,20 @@ public class Obstacle extends Character{
 		z = 1200;
 	}
 	
+	//Method to decrease health of obstacle
+	
 	public void decreaseHealth(int amount) {
 		if(amount < 0) amount = - amount;
 		health -= amount;
 	}
 	
+	//getter for typeOfObstacle
+	
 	public String getType() {
 		return typeOfObstacle;
 	}
+	
+	//Method to check if the given ArrayList had already define or not
 	
 	public <T> boolean isDefine(ArrayList<T> x) {
 		boolean tmp = !((x == null) || (x.size() == 0));
@@ -119,19 +130,22 @@ public class Obstacle extends Character{
 	}
 
 	@Override
-	public void myCallBackOnReleaseKeyBoard(KeyCode e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void myCallBackOnReleaseKeyBoard(KeyCode e) {}
+	
+	//Setter for speed
 	
 	public void setSpeed(int speed) {
 		if(speed <0) speed = -speed;
 		this.speed = speed;
 	}
 	
+	//Reset state track (state of which key to be pressed next)
+	
 	public void resetStateTrack() {
 		this.stateTrack = 0;
 	}
+	
+	//Method hanlde movement of obstacle
 	
 	@Override
 	public void move() {
@@ -148,30 +162,39 @@ public class Obstacle extends Character{
 			if(RenderableHolder.instance.getEntities().contains(this)) {
 				RenderableHolder.instance.getEntities().remove(this);
 			}
+			//Calculate score
 			
-			if(ProgressHolder.frameCounter < 38*ProgressHolder.frameRate) { //Comp Eng Ess
-				if(this.getType() == "Activity") {
+			if(ProgressHolder.frameCounter <= 38*ProgressHolder.frameRate) { //Comp Eng Ess
+				if(this.getType().equals("Activity")) {
 					ProgressHolder.scoreCompEngEss += (int)((100 - this.getPercentHealth())*0.15);
 				}
-				else if(this.getType() == "Quiz") {
+				else if(this.getType().equals("Quiz")) {
 					ProgressHolder.scoreCompEngEss += (int)((100 - this.getPercentHealth())*0.20);
 				}
-			} else if(ProgressHolder.frameCounter < 60*ProgressHolder.frameRate) { //Discrete
-				if(this.getType() == "Midterm") {
+			} else if(ProgressHolder.frameCounter <= 60*ProgressHolder.frameRate) { //Discrete
+				if(this.getType().equals("Activity")) {
+					ProgressHolder.scoreCompEngEss += (int)((100 - this.getPercentHealth())*0.15);
+				}
+				else if(this.getType().equals("Quiz")) {
+					ProgressHolder.scoreCompEngEss += (int)((100 - this.getPercentHealth())*0.20);
+				}
+				else if(this.getType().equals("Midterm")) {
 					ProgressHolder.scoreDiscrete += (int)((100 - this.getPercentHealth())*0.40);
 				}
-				else if(this.getType() == "Final") {
+				else if(this.getType().equals("Final")) {
 					ProgressHolder.scoreDiscrete += (int)((100 - this.getPercentHealth())*0.60);
 				}
 			} else { //Prog Meth
-				if(this.getType() == "Lab") {
+				if(this.getType().equals("Lab")) {
 					ProgressHolder.scoreProgMeth += (int)((100 - this.getPercentHealth())*0.10);
 				}
-				else if(this.getType() == "Final" || this.getType() == "Midterm") {
+				else if(this.getType().equals("Final") || this.getType().equals("Midterm")) {
 					ProgressHolder.scoreProgMeth += (int)((100 - this.getPercentHealth())*0.30);
 				}
 			}
 		}
+		
+		//Move obstacle
 		
 		translateX(-speed);
 	}
@@ -190,14 +213,16 @@ public class Obstacle extends Character{
 					if(GameScene.onScreenObstacle.get(0) != null) {
 						GameScene.onScreenObstacle.get(0).decreaseHealth(1);
 					}
-					if(GameScene.onScreenObstacle.get(0).getType() == "Final" || GameScene.onScreenObstacle.get(0).getType() == "Midterm") {
+					if(GameScene.onScreenObstacle.get(0).getType().equals("Final") || GameScene.onScreenObstacle.get(0).getType().equals("Midterm")) {
 						GameScene.onScreenObstacle.get(0).stateTrack = (GameScene.onScreenObstacle.get(0).stateTrack +1)%4;
 					}
 					else {
 						GameScene.onScreenObstacle.get(0).stateTrack = (GameScene.onScreenObstacle.get(0).stateTrack +1)%2;
 					}	
 				}
+				
 			}
+			
 		}
 		
 		previousKey = e;

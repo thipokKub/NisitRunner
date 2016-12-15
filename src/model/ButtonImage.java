@@ -12,6 +12,16 @@ public abstract class ButtonImage extends Moveable implements IClickable, IKeyPr
 	protected boolean isClicked;
 	protected boolean isHovered;
 
+	/*
+	 * Constructor for ButtonImage
+	 * x,y is the starting point of button on screen (reference point is on left-top of the image)
+	 * onClick refer to location of image when the button was clicked
+	 * onRelease refer to location of image when the button was released
+	 * onHover refer to location of image when the mouse hover above it
+	 * width is the width of the button
+	 * height is the height of the button
+	 */
+	
 	public ButtonImage(int x, int y, String onClick, String onRelease, String onHover, int width, int height) {
 		super(x, y);
 		setDestroy(false);
@@ -24,24 +34,35 @@ public abstract class ButtonImage extends Moveable implements IClickable, IKeyPr
 		z=20;
 	}
 	
+	//Inversely changing isClcik value
+	//Change when the button was clicked
+	
 	@Override
 	public boolean toggle() {
 		isClicked = !isClicked;
 		return isClicked;
 	}
 	
+	//get button width - assumming all the image size were the same (it was resized to width and height)
+	
 	public int getWidth() {
 		return (int)buttonOnReleased.getWidth();
 	}
+	
+	//get button height
 	
 	public int getHeight() {
 		return (int)buttonOnReleased.getHeight();
 	}
 	
+	//Getter for isClicked
+	
 	@Override
 	public boolean isClicked() {
 		return isClicked;
 	}
+	
+	//Method that check if mousX, mouseY was on the button
 	
 	@Override
 	public boolean isMouseHover(int mouseX, int mouseY) {
@@ -49,11 +70,15 @@ public abstract class ButtonImage extends Moveable implements IClickable, IKeyPr
 		return isHovered;
 	}
 	
+	//Method that reset important parameter so it can be used again
+	
 	public void reset() {
 		destroy = false;
 		isClicked = false;
 		isHovered = false;
 	}
+	
+	//Method that detect if MouseX, MouseY was on the elipse
 	
 	@Override
 	public boolean isMouseHoverElipse(int MouseX, int MouseY) {
@@ -65,7 +90,9 @@ public abstract class ButtonImage extends Moveable implements IClickable, IKeyPr
 		isHovered = Entity.isCollideElipse(MouseX, MouseY, centerX, centerY, heightRadius, widthRadius);
 		return isHovered;
 	}
-
+	
+	//Method that handle with drawing image on screen
+	
 	@Override
 	public void draw(GraphicsContext gc) {
 		if(isClicked) {

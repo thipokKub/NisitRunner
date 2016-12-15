@@ -39,9 +39,6 @@ import model.DrawImage;
 
 public class GameMenu extends GameInput{
 	
-	private static ArrayList<Thread> allThread = Utility.ProgressHolder.AllThreads;
-	public static Pane index;
-	
 	public static GameMenu me;
 	public static boolean drawFadeOut;
 	public static boolean showCredits;
@@ -63,7 +60,6 @@ public class GameMenu extends GameInput{
 		
 		me = this;
 		drawFadeOut = false;
-		index = GameManager.root;
 		drawFadeOutDone = false;
 		showCredits = false;
 		startCalled = false;
@@ -119,7 +115,7 @@ public class GameMenu extends GameInput{
 			if(sky == null) {
 				
 				try {
-					sky = new MovingBackground(0, 0, 10, "resource/Background/sky_home.png", -1, false);
+					sky = new MovingBackground(0, 0, 10, "resource/background/sky_home.png", -1, false);
 					sky.fitHeight(GameManager.gc);
 					sky.setZ(1);
 				} catch (ResourceException e) {
@@ -127,7 +123,7 @@ public class GameMenu extends GameInput{
 				}
 				
 				try {
-					GameScene.spotlightForeground = new MovingBackground(0, 0, 20, "resource/Background/foreground.png", 1, false);
+					GameScene.spotlightForeground = new MovingBackground(0, 0, 20, "resource/background/foreground.png", 1, false);
 					GameScene.spotlightForeground.fitHeight(GameManager.gc);
 					GameScene.spotlightForeground.setZ(1499);
 				} catch (ResourceException e) {
@@ -135,13 +131,12 @@ public class GameMenu extends GameInput{
 				}
 				
 				try {
-					buildings = new MovingBackground(0, 0, -3, "resource/Background/building_home.png", -1, false);
+					buildings = new MovingBackground(0, 0, -3, "resource/background/building_home.png", -1, false);
 					buildings.fitHeight(GameManager.gc);
 					buildings.setZ(2);
 				} catch (ResourceException e) {
 					e.printStackTrace();
 				}
-				
 				
 				ProgressHolder.mainCharacter = new MainCharacterMale(100, ProgressHolder.windowHeight-ProgressHolder.characterSize-10, "Steve");
 				ProgressHolder.mainCharacter.resizeByHeight(ProgressHolder.characterSize);
@@ -151,9 +146,6 @@ public class GameMenu extends GameInput{
 				settingButton = new SettingButton(ProgressHolder.windowWidth-200-10-100, 160, 141, 50);
 				creditsButton = new CreditsButton(ProgressHolder.windowWidth-200-10-50, 220, 141, 50);
 				exitButton = new ExitButton(ProgressHolder.windowWidth-200-10, 280, 141, 50);
-				
-				ProgressHolder.CreditsOne = new GameText(80, 360, "Thipok Thammakulangkul", GameManager.gc, Color.BEIGE);
-				ProgressHolder.CreditsTwo = new GameText(110, 400, "Nitipad Jaidee", GameManager.gc, Color.WHITE);
 				
 				try {
 					ProgressHolder.GameCredits = new DrawImage(80, 270, "resource/text/credit.png");
@@ -189,14 +181,14 @@ public class GameMenu extends GameInput{
 	
 	@Override
 	public void addEventListener() {
-		index.setOnMousePressed(new EventHandler<MouseEvent>() {
+		GameManager.root.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				me.updateOnMouseClick(event);
 			}
 		});
 		
-		index.setOnMouseReleased(new EventHandler<MouseEvent>() {
+		GameManager.root.setOnMouseReleased(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				Platform.runLater(() -> {
@@ -205,7 +197,7 @@ public class GameMenu extends GameInput{
 			}
 		});
 		
-		index.setOnMouseMoved(new EventHandler<MouseEvent>() {
+		GameManager.root.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				me.updateOnMouseHover(event);
@@ -233,13 +225,7 @@ public class GameMenu extends GameInput{
 		GameManager.gc.fillRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
 		GameManager.gc.setFont(Font.font("Time New Roman", FontWeight.LIGHT, 70));
 		
-		String titleString = "TMC & SMK Present";
-		int stringWidth = (int)ProgressHolder.fontLoader.computeStringWidth(titleString, GameManager.gc.getFont());
-		int stringHeight = (int)ProgressHolder.fontLoader.getFontMetrics(GameManager.gc.getFont()).getLineHeight();
-		GameText myText = new GameText((ProgressHolder.windowWidth - stringWidth)/2, (ProgressHolder.windowHeight)/2 + stringHeight, titleString, GameManager.gc, Color.WHITE);
-		myText.setFont(Font.font("Time New Roman", FontWeight.LIGHT, 70));
-		
-		allThread.add(new Thread(() -> {
+		Utility.ProgressHolder.AllThreads.add(new Thread(() -> {
 			try {
 				if(ProgressHolder.isFirstTime) {
 					logo.draw(GameManager.gc);
@@ -249,7 +235,6 @@ public class GameMenu extends GameInput{
 							GameManager.gc.clearRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
 							GameManager.gc.setFill(Color.BLACK);
 							GameManager.gc.fillRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
-							//myText.drawFadeInHoldFadeOut(0, 0, 2000, GameManager.gc);
 							logo.drawFadeInHoldFadeOut(0, 0, 2000, GameManager.gc);
 							ProgressHolder.frameCounter++;
 						});
@@ -262,12 +247,12 @@ public class GameMenu extends GameInput{
 				}
 				while(ProgressHolder.frameCounter <= 3*ProgressHolder.frameRate) {
 					Thread.sleep((long)ProgressHolder.frameTime);
+					updateMove();
+					updateValue();
 					Platform.runLater(() -> {
 						
 						GameManager.gc.clearRect(0, 0, ProgressHolder.windowWidth, ProgressHolder.windowHeight);
 						
-						updateMove();
-						updateValue();
 						updateDraw();
 						
 						ProgressHolder.BlackScreen.drawFadeInHoldFadeOut(0, 0, 500, GameManager.gc);
@@ -278,24 +263,22 @@ public class GameMenu extends GameInput{
 				
 			}
 		}));
-		allThread.get(allThread.size()-1).start();
+		Utility.ProgressHolder.AllThreads.get(Utility.ProgressHolder.AllThreads.size()-1).start();
 		ProgressHolder.BlackScreen.resetDrawDissolveHold();
 		
-		allThread.add(new Thread(() -> {
+		Utility.ProgressHolder.AllThreads.add(new Thread(() -> {
 			try {
 				if(ProgressHolder.isFirstTime) Thread.sleep(3000);
 				else Thread.sleep(1000);
 				while(!drawFadeOutDone) {
+					updateMove();
+					updateValue();
 					Platform.runLater(() -> {
 						Utility.AudioUtility.playBackgroundMusic();
 						
-						updateMove();
-						updateValue();
 						updateDraw();
 						
 						if(showCredits) {
-//							ProgressHolder.CreditsOne.drawFadeInHoldFadeOut(500, 2000, 500, GameManager.gc);
-//							ProgressHolder.CreditsTwo.drawFadeInHoldFadeOut(500, 2000, 500, GameManager.gc);
 							ProgressHolder.GameCredits.drawFadeInHoldFadeOut(500, 2000, 500, GameManager.gc);
 						}
 						
@@ -308,7 +291,6 @@ public class GameMenu extends GameInput{
 						if(drawFadeOutDone) {
 							ProgressHolder.BlackScreen.draw(GameManager.gc);
 							RenderableHolder.instance.getEntities().clear();
-							//Utility.AudioUtility.getBackgroundMusic().stop();
 						}
 					});
 					ProgressHolder.frameCounter += 1;
@@ -323,17 +305,16 @@ public class GameMenu extends GameInput{
 			System.out.println("Done");
 		}));
 		
-		allThread.get(allThread.size()-1).start();
+		Utility.ProgressHolder.AllThreads.get(Utility.ProgressHolder.AllThreads.size()-1).start();
 		
 		new Thread(() -> {
 			try {
-				allThread.get(allThread.size()-1).join();
+				Utility.ProgressHolder.AllThreads.get(Utility.ProgressHolder.AllThreads.size()-1).join();
 				if(settingCalled) {
 					System.out.println("Setting Called");
 					ProgressHolder.BlackScreen.resetDrawDissolveHold();
 					
 					GameManager.changeScene();
-					//SettingScene.r
 					SettingScene settingScene = new SettingScene();
 				}
 				if(startCalled) {

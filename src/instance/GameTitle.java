@@ -12,7 +12,7 @@ public class GameTitle extends model.ButtonImage {
 	private int Count;
 	
 	public GameTitle(int x, int y, int width, int height) {
-		super(x, y, "resource/Button/logo_home.png", "resource/Button/logo_home.png", "resource/Button/logo_home.png", width, height);
+		super(x, y, "resource/button/logo_home.png", "resource/button/logo_home.png", "resource/button/logo_home.png", width, height);
 		Count = 0;
 	}
 	

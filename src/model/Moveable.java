@@ -10,6 +10,8 @@ public abstract class Moveable extends Entity {
 	private int frameCounter3;
 	private boolean isReset;
 	
+	//Initialize Movable
+	
 	public Moveable(int x, int y) {
 		super(x, y);
 		frameCounter = 0;
@@ -18,40 +20,19 @@ public abstract class Moveable extends Entity {
 		loopCount = 0;
 	}
 
+	//Move object in x-axis by amount
+	
 	public void translateX(int amount) {
 		x += amount;
 	}
+	
+	//Move object in y-axis by amount
 	
 	public void translateY(int amount) {
 		y += amount;
 	}
 	
-	public boolean drawShakeX(int period, int amount, GraphicsContext gc) {
-		//period in mills
-		int frameLoop = period*ProgressHolder.frameRate/1000;
-		if(frameLoop%2 == 1) {
-			if(frameCounter < (int)(frameLoop/2)) {
-				if(frameCounter +1 >= (int)(frameLoop/2)) {
-					translateX(amount-frameCounter*(int)(2*amount/frameLoop));
-				}
-			}
-			else {
-				translateX(-1*(int)(2*amount/frameLoop));
-			}
-		}
-		else {
-			if(frameCounter < frameLoop/2) {
-				translateX(2*amount/frameLoop);
-			}
-			else {
-				translateX(-2*amount/frameLoop);
-			}
-		}
-		frameCounter = (frameCounter + 1)%frameLoop;
-		this.draw(gc);
-		if(frameCounter +1 == frameLoop) loopCount += 1;
-		return (frameCounter + 1 == frameLoop);
-	}
+	//Draw dissolve object
 	
 	public boolean drawDissolve(boolean isFadeIn, int period, GraphicsContext gc) {
 		int frameLoop = ProgressHolder.frameRate*period/1000;
@@ -65,6 +46,8 @@ public abstract class Moveable extends Entity {
 		if(frameCounter + 1 == frameLoop) loopCount += 1;
 		return (frameCounter + 2 == frameLoop);
 	}
+	
+	//Draw fade in and then out
 	
 	public boolean drawBlink(int period, GraphicsContext gc) {
 		//Buggy
@@ -83,6 +66,8 @@ public abstract class Moveable extends Entity {
 		return ((loopCount%2==1)&&tmp);
 	}
 	
+	//Draw dissolve object then hold the latest result
+	
 	public boolean drawDissolveHold(boolean isFadeIn, int period, GraphicsContext gc) {
 		int frameLoop = ProgressHolder.frameRate*period/1000;
 		double opacity = isFadeIn ? 0.0 : 1.0;
@@ -100,6 +85,8 @@ public abstract class Moveable extends Entity {
 		}
 		return tmp;
 	}
+	
+	//Draw dissolve object from fade in and fade out with configurable time (unit in milliseconds)
 	
 	public boolean drawFadeInHoldFadeOut(int fadeIn, int hold, int fadeOut, GraphicsContext gc) {
 		double amountIn = (fadeIn != 0) ? 1.0/((fadeIn/1000.0)*ProgressHolder.frameRate): 0;
@@ -124,6 +111,8 @@ public abstract class Moveable extends Entity {
 		frameCounter3++;
 		return frameCounter3 >= fadeIn + hold + fadeOut;
 	}
+	
+	//reset parameter before it can be drawn again
 	
 	public void resetDrawDissolveHold() {
 		isReset = true;

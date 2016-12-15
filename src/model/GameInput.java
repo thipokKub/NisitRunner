@@ -1,11 +1,11 @@
 package model;
 
+import Utility.CodeUtility;
 import Utility.ProgressHolder;
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import logic.CodeUtility;
 
 public abstract class GameInput extends Application {
 	
@@ -13,11 +13,11 @@ public abstract class GameInput extends Application {
 	public abstract void updateMove(); //For Moveable
 	public abstract void updateValue(); //For Bar
 	
-	public abstract void setUpThreadAndAnimation();
-	public abstract void addEventListener();
-	public abstract void setUpCanvas();
+	public abstract void setUpThreadAndAnimation(); //Method that handle screen animation
+	public abstract void addEventListener(); //Method that add event listener to scene
+	public abstract void setUpCanvas(); //Method that was called before by setting up the parameters for each Scene
 	
-	private static KeyCode previousKey;
+	//Method to run if mouse was clicked
 	
 	public void updateOnMouseClick(MouseEvent e) {
 		for(ButtonImage x: ProgressHolder.updateOnClicked) {
@@ -25,11 +25,16 @@ public abstract class GameInput extends Application {
 		}
 	};
 	
+	//Method to run if mouse was moved
+	
 	public void updateOnMouseHover(MouseEvent e) {
 		for(ButtonImage x: ProgressHolder.updateOnHover) {
 			x.myCallBackOnHovered(e);
 		}
 	};
+	
+	//Method to run if mouse was released
+	
 	public void updateOnMouseRelease(MouseEvent e) {
 		for(ButtonImage x: ProgressHolder.updateOnReleased) {
 			x.myCallBackOnRelease(e);
@@ -37,8 +42,9 @@ public abstract class GameInput extends Application {
 	};
 	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-	}
+	public void start(Stage primaryStage) throws Exception {}
+	
+	//Method to run if keyboard was pressed
 	
 	public void receiveKey(KeyCode new_code) {
 		// TODO Auto-generated method stub
@@ -61,6 +67,8 @@ public abstract class GameInput extends Application {
 		
 	}
 
+	//Method to run if keyboard was released
+	
 	public void dropKey(KeyCode new_code) {
 		// TODO Auto-generated method stub
 		//Fill in here

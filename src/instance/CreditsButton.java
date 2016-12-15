@@ -72,8 +72,6 @@ public class CreditsButton extends model.ButtonImage{
 			else {
 				GameMenu.showCredits = false;
 				frameStart = -1;
-				ProgressHolder.CreditsOne.resetDrawDissolveHold();
-				ProgressHolder.CreditsTwo.resetDrawDissolveHold();
 				ProgressHolder.GameCredits.resetDrawDissolveHold();
 			}
 		}
