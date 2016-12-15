@@ -54,6 +54,7 @@ public class ProgressHolder {
 	public static boolean isGodMode;
 	
 	public static DrawImage BlackScreen;
+	public static DrawImage BlackScreenTransparent;
 	public static MainCharacterMale mainCharacter;
 	
 	public static DrawImage GameCredits;

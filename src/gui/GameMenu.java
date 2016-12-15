@@ -45,6 +45,7 @@ public class GameMenu extends GameInput{
 	private static boolean drawFadeOutDone;
 	public static boolean startCalled;
 	public static boolean settingCalled;
+	public static boolean helpCalled;
 	
 	private static MovingBackground sky;
 	private static MovingBackground buildings;
@@ -53,6 +54,8 @@ public class GameMenu extends GameInput{
 	private static SettingButton settingButton;
 	private static CreditsButton creditsButton;
 	private static ExitButton exitButton;
+	private static HelpButton helpButton;
+	public static ArrayList<DrawImage> helpFrameTmp;
 	public static DrawImage logo;
 	
 	public GameMenu() {
@@ -64,6 +67,8 @@ public class GameMenu extends GameInput{
 		showCredits = false;
 		startCalled = false;
 		settingCalled = false;
+		helpCalled = false;
+		helpFrameTmp = new ArrayList<DrawImage>();
 		
 		Platform.runLater(() -> {
 			try {
@@ -83,7 +88,13 @@ public class GameMenu extends GameInput{
 	@Override
 	public void updateDraw() {
 		GameManager.gc.clearRect(0, 0, GameManager.gc.getCanvas().getWidth(), GameManager.gc.getCanvas().getHeight());
+		helpFrameTmp.clear();
 		for(IRenderable e: RenderableHolder.instance.getEntities()) {
+			for(int i = 0; i < 4; i++) {
+				if(e.equals(helpButton.getHelpFrame()[i])) {
+			 		helpFrameTmp.add((DrawImage) e);
+			  	}
+			}
 			e.draw(GameManager.gc);
 		}
 	}
@@ -146,14 +157,17 @@ public class GameMenu extends GameInput{
 				settingButton = new SettingButton(ProgressHolder.windowWidth-200-10-100, 160, 141, 50);
 				creditsButton = new CreditsButton(ProgressHolder.windowWidth-200-10-50, 220, 141, 50);
 				exitButton = new ExitButton(ProgressHolder.windowWidth-200-10, 280, 141, 50);
+				helpButton = new HelpButton(ProgressHolder.windowWidth-80, ProgressHolder.windowHeight-80, 50, 50);
 				
 				try {
 					ProgressHolder.GameCredits = new DrawImage(80, 270, "resource/text/credit.png");
 					ProgressHolder.GameCredits.setSize((int)((2548.0/478.0)*70),70);
+					
 				} catch (ResourceException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 			}
 			
 			settingButton.setX(ProgressHolder.windowWidth-200-10-100);
@@ -167,12 +181,14 @@ public class GameMenu extends GameInput{
 			RenderableHolder.instance.add(settingButton);
 			RenderableHolder.instance.add(creditsButton);
 			RenderableHolder.instance.add(exitButton);
+			RenderableHolder.instance.add(helpButton);
 			
 			GameManager.addCallBackToHolder(myGameTitle);
 			GameManager.addCallBackToHolder(startButton);
 			GameManager.addCallBackToHolder(settingButton);
 			GameManager.addCallBackToHolder(creditsButton);
 			GameManager.addCallBackToHolder(exitButton);
+			GameManager.addCallBackToHolder(helpButton);
 			
 			ProgressHolder.updateOnKeyPressed.add(ProgressHolder.mainCharacter);
 			
@@ -282,16 +298,26 @@ public class GameMenu extends GameInput{
 							ProgressHolder.GameCredits.drawFadeInHoldFadeOut(500, 2000, 500, GameManager.gc);
 						}
 						
+						if(helpCalled) {
+							ProgressHolder.BlackScreenTransparent.drawFadeInHoldFadeOut(500, 6000, 500, GameManager.gc);
+							for(DrawImage e: helpFrameTmp) {
+								e.draw(GameManager.gc);
+							}
+							helpButton.draw(GameManager.gc);
+						}
+						
 						if(drawFadeOut && !drawFadeOutDone) {
 							if(drawFade()) {
 								ProgressHolder.BlackScreen.draw(GameManager.gc);
 								drawFadeOut = false;
 							};
 						}
+						
 						if(drawFadeOutDone) {
 							ProgressHolder.BlackScreen.draw(GameManager.gc);
 							RenderableHolder.instance.getEntities().clear();
 						}
+						
 					});
 					ProgressHolder.frameCounter += 1;
 					Thread.sleep((int)(1000/ProgressHolder.frameRate));
@@ -315,6 +341,8 @@ public class GameMenu extends GameInput{
 					ProgressHolder.BlackScreen.resetDrawDissolveHold();
 					
 					GameManager.changeScene();
+					helpCalled = false;
+					showCredits = false;
 					SettingScene settingScene = new SettingScene();
 				}
 				if(startCalled) {

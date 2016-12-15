@@ -59,6 +59,7 @@ public class GameManager extends Application{
 		
 		try {
 			ProgressHolder.BlackScreen = new DrawImage(0, 0, "resource/background/BlackScreen.png");
+			ProgressHolder.BlackScreenTransparent = new DrawImage(0, 0, "resource/background/BlackScreenTransparent.png");
 		} catch (ResourceException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
